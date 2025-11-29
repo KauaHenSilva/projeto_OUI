@@ -1,2 +1,2 @@
 all:
-	docker compose up --build --watch
+	docker compose up --build

@@ -36,7 +36,7 @@ void rootRender() {
 
     ReactCreateFragment(
       ReactCreateElement("p", ReactNULL,
-        ReactCreateString("This webserver is built with C code compiled to WebAssembly.")
+        ReactCreateString("This web is built with C code compiled to WebAssembly.")
       ),
 
       ReactCreateElement("p", ReactNULL,
