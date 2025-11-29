@@ -6,7 +6,7 @@ Este projeto consiste em uma calculadora científica desenvolvida em **C puro**,
 
 Visualização do projeto rodando no navegador:
 
-| Layout Padrão | Histórico e Cálculos |
+| Layout Padrão | Cálculo |
 |:---:|:---:|
 | ![Layout da Calculadora](capturas/image_1.png) | ![Histórico de Operações](capturas/image_2.png) |
 
