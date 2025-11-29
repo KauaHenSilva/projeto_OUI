@@ -4,6 +4,7 @@ services:
     working_dir: /srv/page
     volumes:
       - ./calculadora:/srv
+      - ./calculadora/index.html:/srv/page/index.html
     ports:
       - "8080:8080"
     command: sh -c "while [ ! -f /srv/page/index.html ]; do echo 'Aguardando compilador...'; sleep 2; done && python3 -m http.server 8080"
@@ -14,8 +15,8 @@ services:
     volumes:
       - ./calculadora/page:/src/page
       - ./calculadora/dep:/src/dep
-      - ./calculadora/index.html:/src/index.html
-
+      - ./calculadora/app.c:/src/app.c
+    
     command: >
       bash -c "
       mkdir -p dep page &&
@@ -23,16 +24,10 @@ services:
       if [ ! -f dep/c2wasm.c ]; then curl -L -o dep/c2wasm.c https://github.com/OUIsolutions/C2Wasm/releases/download/0.10.0/c2wasm.c; fi &&
       
       while true; do
-        if [ -f app.c ]; then
+        if [ ! -f page/app.js ] || [ app.c -nt page/app.js ]; then
+          echo 'Mudança detectada. Compilando...'
           emcc app.c -I dep -o page/app.js
-          sleep infinity
-        else
-          sleep 1
+          echo 'Concluído.'
         fi
+        sleep 1
       done"
-
-    develop:
-      watch:
-        - action: sync+restart
-          path: ./calculadora/app.c
-          target: /src/app.c
