@@ -1,0 +1,19 @@
+
+# General ignores
+dist/
+*.wasm
+node_modules/
+.git/
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.env
+*.log
+.DS_Store
+build/
+tmp/
+*.o
+*.a
+

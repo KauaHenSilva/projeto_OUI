@@ -1,0 +1,38 @@
+services:
+  web:
+    image: python:3.11-slim
+    working_dir: /srv/page
+    volumes:
+      - ./calculadora:/srv
+    ports:
+      - "8080:8080"
+    command: sh -c "while [ ! -f /srv/page/index.html ]; do echo 'Aguardando compilador...'; sleep 2; done && python3 -m http.server 8080"
+
+  compiler:
+    image: emscripten/emsdk:latest
+    working_dir: /src
+    volumes:
+      - ./calculadora/page:/src/page
+      - ./calculadora/dep:/src/dep
+      - ./calculadora/index.html:/src/index.html
+
+    command: >
+      bash -c "
+      mkdir -p dep page &&
+      if [ ! -f dep/react.c ]; then curl -L -o dep/react.c https://github.com/OUIsolutions/C-React/releases/download/0.3.0/react.c; fi &&
+      if [ ! -f dep/c2wasm.c ]; then curl -L -o dep/c2wasm.c https://github.com/OUIsolutions/C2Wasm/releases/download/0.10.0/c2wasm.c; fi &&
+      
+      while true; do
+        if [ -f app.c ]; then
+          emcc app.c -I dep -o page/app.js
+          sleep infinity
+        else
+          sleep 1
+        fi
+      done"
+
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./calculadora/app.c
+          target: /src/app.c
